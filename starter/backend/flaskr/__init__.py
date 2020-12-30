@@ -77,15 +77,17 @@ def create_app(test_config=None):
         end = start + QUESTIONS_PER_PAGE
         categories = list(map(Category.format, Category.query.all()))
         categoriesList = {category['id']:category['type'] for category in categories}
-
-        return jsonify({
-                  'success': True,
-                  'questions': formatted_questions[start:end],
-                  'total_questions': len(formatted_questions),
-                  'categories': categoriesList
-              })
+        if formatted_questions[start:end]:
+          return jsonify({
+                    'success': True,
+                    'questions': formatted_questions[start:end],
+                    'total_questions': len(formatted_questions),
+                    'categories': categoriesList
+                })
+        else:
+          abort(404)
     except:
-      abort(400)
+      abort(404)
     finally:
       db.session.close()  
   '''
@@ -106,7 +108,7 @@ def create_app(test_config=None):
       })
     except:
       db.session.rollback()
-      abort(400)
+      abort(404)
     finally:
       db.session.close()
   '''
@@ -168,11 +170,14 @@ def create_app(test_config=None):
         page = request.args.get('page', 1, type=int)
         start = (page - 1) * QUESTIONS_PER_PAGE
         end = start + QUESTIONS_PER_PAGE
-        return jsonify({
-                'success': True,
-                'questions': formatted_questions[start:end],
-                'total_questions': len(formatted_questions),
-            })
+        if formatted_questions[start:end]:
+          return jsonify({
+                  'success': True,
+                  'questions': formatted_questions[start:end],
+                  'total_questions': len(formatted_questions),
+              })
+        else:
+          abort(404)
     except:
       abort(404)
     finally:
@@ -197,15 +202,18 @@ def create_app(test_config=None):
       page = request.args.get('page', 1, type=int)
       start = (page - 1) * QUESTIONS_PER_PAGE
       end = start + QUESTIONS_PER_PAGE
-      result = jsonify({
+      if formatted_questions[start:end]:
+        result = jsonify({
                   'success': True,
                   'questions': formatted_questions[start:end],
                   'total_questions': len(formatted_questions),
                   'current_category': category_id
               })
-      return result
+        return result
+      else:
+        abort(404)
     except:
-      abort(400)
+      abort(404)
   '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
@@ -239,7 +247,7 @@ def create_app(test_config=None):
         else:
             return jsonify({"success": False, "question": False})
     except:
-        abort(404)
+        abort(422)
     finally:
       db.session.close()
 
@@ -277,6 +285,13 @@ def create_app(test_config=None):
         "error": 500,
         "message": "The server encountered an unexpected condition that prevented it from fulfilling the request"
         }), 500
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+    return jsonify({
+        "success": False, 
+        "error": 405,
+        "message": "Method not allowed"
+        }), 405
   return app
 
     

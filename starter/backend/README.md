@@ -73,6 +73,7 @@ The API will return the following types when requests fail:
 -	400: Bad Request
 -	404: Not Found
 -	422: Unprocessable Entity
+- 405: Method Not Allowed
 - 500: Internal Server Error
 ### Endpoints
 
@@ -93,12 +94,12 @@ An object of id: category_string key:value pairs.
 ```
 {
 "categories": {
-"1": "Science",
-"2": "Art",
-"3": "Geography",
-"4": "History",
-"5": "Entertainment",
-"6": "Sports"
+"0": "Science",
+"1": "Art",
+"2": "Geography",
+"3": "History",
+"4": "Entertainment",
+"5": "Sports"
 },
 "success": true
 }
@@ -112,89 +113,90 @@ An object of id: category_string key:value pairs.
 - Returns: An object with a success:value key:value pair, total_questions: total_questions_number key:value pair, questions key that contains a list of questions objects.
 - Sample: `curl http://127.0.0.1:5000/questions`
 ```{
-"categories": {
-"1": "Science",
-"2": "Art",
-"3": "Geography",
-"4": "History",
-"5": "Entertainment",
-"6": "Sports"
-},
-"questions": [
-{
-"answer": "Muhammad Ali",
-"category": 4,
-"difficulty": 1,
-"id": 9,
-"question": "What boxer's original name is Cassius Clay?"
-},
-{
-"answer": "Apollo 13",
-"category": 5,
-"difficulty": 4,
-"id": 2,
-"question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
-},
-{
-"answer": "Edward Scissorhands",
-"category": 5,
-"difficulty": 3,
-"id": 6,
-"question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
-},
-{
-"answer": "Brazil",
-"category": 6,
-"difficulty": 3,
-"id": 10,
-"question": "Which is the only team to play in every soccer World Cup tournament?"
-},
-{
-"answer": "Uruguay",
-"category": 6,
-"difficulty": 4,
-"id": 11,
-"question": "Which country won the first ever soccer World Cup in 1930?"
-},
-{
-"answer": "George Washington Carver",
-"category": 4,
-"difficulty": 2,
-"id": 12,
-"question": "Who invented Peanut Butter?"
-},
-{
-"answer": "Lake Victoria",
-"category": 3,
-"difficulty": 2,
-"id": 13,
-"question": "What is the largest lake in Africa?"
-},
-{
-"answer": "The Palace of Versailles",
-"category": 3,
-"difficulty": 3,
-"id": 14,
-"question": "In which royal palace would you find the Hall of Mirrors?"
-},
-{
-"answer": "Agra",
-"category": 3,
-"difficulty": 2,
-"id": 15,
-"question": "The Taj Mahal is located in which Indian city?"
-},
-{
-"answer": "Escher",
-"category": 2,
-"difficulty": 1,
-"id": 16,
-"question": "Which Dutch graphic artist–initials M C was a creator of optical illusions?"
+  "categories": {
+    "0": "Science",
+    "1": "Art",
+    "2": "Geography",
+    "3": "History",
+    "4": "Entertainment",
+    "5": "Sports"
+  },
+  "questions": [
+    {
+      "answer": "The Liver",
+      "category": 0,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+    {
+      "answer": "Alexander Fleming",
+      "category": 0,
+      "difficulty": 3,
+      "id": 21,
+      "question": "Who discovered penicillin?"
+    },
+    {
+      "answer": "Blood",
+      "category": 0,
+      "difficulty": 4,
+      "id": 22,
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    },
+    {
+      "answer": "Escher",
+      "category": 1,
+      "difficulty": 1,
+      "id": 16,
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    },
+    {
+      "answer": "Mona Lisa",
+      "category": 1,
+      "difficulty": 3,
+      "id": 17,
+      "question": "La Giaconda is better known as what?"
+    },
+    {
+      "answer": "One",
+      "category": 1,
+      "difficulty": 4,
+      "id": 18,
+      "question": "How many paintings did Van Gogh sell in his lifetime?"
+    },
+    {
+      "answer": "Jackson Pollock",
+      "category": 1,
+      "difficulty": 2,
+      "id": 19,
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    },
+    {
+      "answer": "Lake Victoria",
+      "category": 2,
+      "difficulty": 2,
+      "id": 13,
+      "question": "What is the largest lake in Africa?"
+    },
+    {
+      "answer": "The Palace of Versailles",
+      "category": 2,
+      "difficulty": 3,
+      "id": 14,
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    },
+    {
+      "answer": "Agra",
+      "category": 2,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ],
+  "success": true,
+  "total_questions": 19
 }
-],
-"success": true,
-"total_questions": 33
-}
+
 ```
 #### POST '/questions'
 
@@ -224,7 +226,7 @@ An object of id: category_string key:value pairs.
 - If provided, deletes the specified question.
 - Request argument: question ID.
 - Returns: an object of success: value key:value pairs and id: deleted_question_id key:value pairs.
-- Sample: `curl curl http://127.0.0.1:5000/questions/9 -X DELETE`
+- Sample: `curl http://127.0.0.1:5000/questions/9 -X DELETE`
 ```
 {
   "id": "9",     
@@ -237,36 +239,29 @@ An object of id: category_string key:value pairs.
 - Fetches a dictionary of questions based on the submitted category ID.
 - Request argument: category ID.
 - Returns: an object with a success:value key:value pair, total_questions: total_questions_number key:value pair, questions key that contains a list of questions objects, and current_category: category_id key:value pair.
-- Sample: `curl http://127.0.0.1:5000/categories/3/question'`
+- Sample: `curl http://127.0.0.1:5000/categories/3/questions`
 ```
 {
-  "current_category": 3,
   "questions": [
     {
-      "answer": "Lake Victoria",
+      "answer": "Maya Angelou",
       "category": 3,
       "difficulty": 2,
-      "id": 13,
-      "question": "What is the largest lake in Africa?"
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
     },
     {
-      "answer": "The Palace of Versailles",
-      "category": 3,
+      "answer": "Edward Scissorhands",
+      "category": 4,
       "difficulty": 3,
-      "id": 14,
-      "question": "In which royal palace would you find the Hall of Mirrors?"
-    },
-    {
-      "answer": "Agra",
-      "category": 3,
-      "difficulty": 2,
-      "id": 15,
-      "question": "The Taj Mahal is located in which Indian city?"
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
     }
   ],
   "success": true,
-  "total_questions": 3
+  "total_questions": 2
 }
+
 ```
 #### POST '/add'
 - Creates a new question using the submitted question, answer, category, difficulty.
@@ -278,7 +273,7 @@ An object of id: category_string key:value pairs.
   "answer": "The God Father",
   "category": 5,
   "difficulty": 2,
-  "id": 57,
+  "id": 25,
   "question": "What is the best movie ever?",
   "success": true
 }
@@ -289,13 +284,13 @@ An object of id: category_string key:value pairs.
 - Feteches a random question within a given category.
 - Request arguments: an object of 'quiz_category' key that includes an object of id: category_id  and type: category_string key:value pairs, and previous_questions key that contains a list of the previously played questions IDs.
 - Returns: an object with a success:value key:value pair and question key that includes the random question object or False if there is no question.
-- Sample: `curl --request POST http://127.0.0.1:5000/quizzes --header "Content-Type: application/json" -d "{\"previous_questions\":[17], \"quiz_category\": {\"id\": 2, \"type\": \"Art\"}}"`
+- Sample: `curl --request POST http://127.0.0.1:5000/quizzes --header "Content-Type: application/json" -d "{\"previous_questions\":[17], \"quiz_category\": {\"id\": 1, \"type\": \"Art\"}}"`
 
 ```
 {
   "question": {
     "answer": "One",
-    "category": 2,
+    "category": 1,
     "difficulty": 4,
     "id": 18,
     "question": "How many paintings did Van Gogh sell in his lifetime?"
